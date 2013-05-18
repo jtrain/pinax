@@ -61,7 +61,7 @@ class PasswordReset(models.Model):
 
 @receiver(post_save, sender=User)
 def create_account(sender, instance=None, **kwargs):
-    if instance is None:
+    if instance is None or kwargs.get('raw'):
         return
     account, created = Account.objects.get_or_create(user=instance)
 
@@ -69,7 +69,7 @@ def create_account(sender, instance=None, **kwargs):
 # @@@ move to emailconfirmation app?
 @receiver(post_save, sender=User)
 def superuser_email_address(sender, instance=None, **kwargs):
-    if instance is None:
+    if instance is None or kwargs.get('raw'):
         return
     # only run when we are in syncdb or createsuperuser to be as unobstrusive
     # as possible and reduce the risk of running at inappropriate times
